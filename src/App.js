@@ -19,43 +19,50 @@ class App extends React.Component{
         window.gapi.load('auth2', () => {
             this.auth2 = gapi.auth2.init({
                 client_id: process.env.REACT_APP_CLIENT_ID,
-                discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration' ],
-                scope: 'https://www.googleapis.com/auth/calendar'
+                discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration'],
+                scope: 'https://www.googleapis.com/auth/calendar' //'openid', 'profile', 'email',
             }).then(() => {
                 console.log('on init');
                 this.setState({
-                  isSignedIn: this.auth2.isSignedIn.get(),
+                    isSignedIn: this.auth2.isSignedIn.get(),
                 });
-        })
-      });
+                //console.log(this.auth2.getAuthResponse())
+                var googleUser = this.auth2.currentUser.get()
+                //      GoogleAuth = gapi.auth2.getAuthInstance();
+                document.querySelector('#name').innerText = JSON.stringify(googleUser)
+                console.log(this.auth2.currentUser.get());
 
-        window.gapi.load('signin2', function() {
-          // Method 3: render a sign in button
-          // using this method will show Signed In if the user is already signed in
-          var opts = {
-            width: 200,
-            height: 50,
-            client_id: process.env.REACT_APP_CLIENT_ID,
-            onsuccess: successCallback
-          }
-          gapi.signin2.render('loginButton', opts)
-        })
+            });
+        });
+
+        window.gapi.load('signin2', function () {
+            var opts = {
+                width: 200,
+                height: 50,
+                client_id: process.env.REACT_APP_CLIENT_ID,
+                onsuccess: successCallback
+            }
+            gapi.signin2.render('loginButton', opts)
+        });
     }
 
-    onSuccess() {
-        console.log('on success')
-        this.setState({
-          isSignedIn: true,
-          err: null
-        })
-    }
 
-    onLoginFailed(err) {
-    this.setState({
-      isSignedIn: false,
-      error: err,
-    })
-  }
+        onSuccess()
+        {
+            console.log('on success')
+            this.setState({
+                isSignedIn: true,
+                err: null
+            })
+        }
+
+        onLoginFailed(err)
+        {
+            this.setState({
+                isSignedIn: false,
+                error: err,
+            })
+        }
 
 
 
@@ -74,6 +81,8 @@ class App extends React.Component{
             )
         }
     }
+
+
     render() {
         return(
         <div className="App">
