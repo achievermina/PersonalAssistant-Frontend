@@ -3,12 +3,13 @@ import React from 'react';
 import './App.css';
 import 'gapi';
 import axios from 'axios';
+import {login} from './components/UserFunction'
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                isSignedIn: false,
+                isSignedIn: localStorage.getItem('token') ? true : false,
                 User: {
                     email: '',
                     uniqueId:'',
@@ -28,25 +29,32 @@ class App extends React.Component{
                 client_id: process.env.REACT_APP_CLIENT_ID,
                 discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration'],
                 scope: 'https://www.googleapis.com/auth/calendar'//,'openid', 'profile', 'email']
-            }).then((auth2) => {
-                // 여길 어떻게 이쁘게 할수 있을거 같은데
-                this.setState({
-                    isSignedIn: auth2.isSignedIn.get(),
-                });
 
-                if (this.state.isSignedIn) {
-                    var currentUser = auth2.currentUser.get();
-                    const User = {
-                        email: currentUser.Qt.zu,
-                        uniqueId: currentUser.Qt.SU,
-                        name: currentUser.Qt.Ad,
-                        accessToken: currentUser.uc.access_token,
-                        idToken: currentUser.uc.id_token,
-                        expires_at: currentUser.uc.expires_at,
-                    };
-                    this.setState({User: User});
-                    this.checkRegister(User);
-                }
+            }).then((auth2) => {
+                //if (this.state.isSignedIn) {
+                var currentUser = auth2.currentUser.get();
+                const User = {
+                    email: currentUser.Qt.zu,
+                    id: currentUser.Qt.SU,
+                    name: currentUser.Qt.Ad,
+                    accessToken: currentUser.uc.access_token,
+                    idToken: currentUser.uc.id_token,
+                    expires_at: currentUser.uc.expires_at,
+                };
+                this.setState({User: User});
+
+                console.log(this.state)
+                console.log(currentUser)
+                debugger;
+                //POST 요청
+                login(User)
+                debugger;
+
+                //this.checkRegister(User);
+                //}
+
+
+
 
             });
         });
@@ -112,7 +120,7 @@ class App extends React.Component{
       console.log(body);
       debugger;
       try {
-        const res = axios.post('https://localhost:8000/', body, config);
+        const res = axios.post('https://127.0.0.1:5000/login', body, config);
 
       } catch (err) {
          console.log(err.response.data);
