@@ -2,35 +2,51 @@
 import React from 'react';
 import './App.css';
 import 'gapi';
-
+import axios from 'axios';
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
                 isSignedIn: false,
+                User: {
+                    email: '',
+                    uniqueId:'',
+                    name:'',
+                    accessToken:'',
+                    idToken: '',
+                    expires_at:'',
+                }
             }
-            console.log(this.state.isSignedIn);
     }
 
     componentDidMount() {
         const successCallback = this.onSuccess.bind(this);
 
         window.gapi.load('auth2', () => {
-            this.auth2 = gapi.auth2.init({
+            var auth2 =  gapi.auth2.init({
                 client_id: process.env.REACT_APP_CLIENT_ID,
                 discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration'],
-                scope: 'https://www.googleapis.com/auth/calendar' //'openid', 'profile', 'email',
-            }).then(() => {
-                console.log('on init');
+                scope: 'https://www.googleapis.com/auth/calendar'//,'openid', 'profile', 'email']
+            }).then((auth2) => {
+                // 여길 어떻게 이쁘게 할수 있을거 같은데
                 this.setState({
-                    isSignedIn: this.auth2.isSignedIn.get(),
+                    isSignedIn: auth2.isSignedIn.get(),
                 });
-                //console.log(this.auth2.getAuthResponse())
-                var googleUser = this.auth2.currentUser.get()
-                //      GoogleAuth = gapi.auth2.getAuthInstance();
-                document.querySelector('#name').innerText = JSON.stringify(googleUser)
-                console.log(this.auth2.currentUser.get());
+
+                if (this.state.isSignedIn) {
+                    var currentUser = auth2.currentUser.get();
+                    const User = {
+                        email: currentUser.Qt.zu,
+                        uniqueId: currentUser.Qt.SU,
+                        name: currentUser.Qt.Ad,
+                        accessToken: currentUser.uc.access_token,
+                        idToken: currentUser.uc.id_token,
+                        expires_at: currentUser.uc.expires_at,
+                    };
+                    this.setState({User: User});
+                    this.checkRegister(User);
+                }
 
             });
         });
@@ -45,6 +61,7 @@ class App extends React.Component{
             gapi.signin2.render('loginButton', opts)
         });
     }
+
 
 
         onSuccess()
@@ -81,6 +98,27 @@ class App extends React.Component{
             )
         }
     }
+
+    checkRegister (User) {
+      // Headers
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      // Request Body
+      const body = JSON.stringify(User);
+      console.log(body);
+      debugger;
+      try {
+        const res = axios.post('https://localhost:8000/', body, config);
+
+      } catch (err) {
+         console.log(err.response.data);
+      }
+    };
+
 
 
     render() {
