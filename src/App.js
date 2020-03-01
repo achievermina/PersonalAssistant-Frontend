@@ -2,13 +2,13 @@
 import React from 'react';
 import './App.css';
 import 'gapi';
-
+import './components/youtube'
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                isSignedIn: false,
+                isSignedIn: true,
             }
             console.log(this.state.isSignedIn);
     }
@@ -61,7 +61,11 @@ class App extends React.Component{
 
     checkSignedIn () {
         if (this.state.isSignedIn){
-            return <p>hello user, you're signed in </p>
+             return ( <p>hello user, you're signed in </p>)
+            // 여기에 youtube clone 을 붙이려면
+            //return <div>{.}</div>
+
+
         } else {
 
             return (
