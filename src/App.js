@@ -2,139 +2,102 @@
 import React from 'react';
 import './App.css';
 import 'gapi';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 import {login} from './components/UserFunction'
+import GoogleLogin from "react-google-login";
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                isSignedIn: localStorage.getItem('token') ? true : false,
+                isSignedIn: false,//localStorage.getItem('token') ? true : false,
                 User: {
                     email: '',
-                    uniqueId:'',
+                    id:'',
                     name:'',
-                    accessToken:'',
-                    idToken: '',
-                    expires_at:'',
+                    myToken: Cookies.get('myToken')
                 }
             }
     }
 
     componentDidMount() {
-        const successCallback = this.onSuccess.bind(this);
-
-        window.gapi.load('auth2', () => {
-            var auth2 =  gapi.auth2.init({
-                client_id: process.env.REACT_APP_CLIENT_ID,
-                discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration'],
-                scope: 'https://www.googleapis.com/auth/calendar'//,'openid', 'profile', 'email']
-
-            }).then((auth2) => {
-                //if (this.state.isSignedIn) {
-                var currentUser = auth2.currentUser.get();
-                const User = {
-                    email: currentUser.Qt.zu,
-                    id: currentUser.Qt.SU,
-                    name: currentUser.Qt.Ad,
-                    accessToken: currentUser.uc.access_token,
-                    idToken: currentUser.uc.id_token,
-                    expires_at: currentUser.uc.expires_at,
-                };
-                this.setState({User: User});
-
-                console.log(this.state)
-                console.log(currentUser)
-                debugger;
-                //POST 요청
-                login(User)
-                debugger;
-
-                //this.checkRegister(User);
-                //}
-
-
-
-
-            });
-        });
-
-        window.gapi.load('signin2', function () {
-            var opts = {
-                width: 200,
-                height: 50,
-                client_id: process.env.REACT_APP_CLIENT_ID,
-                onsuccess: successCallback
+            //우리서버에 확인
+            //local storage 에서 마이토큰 가져와 -> 우리서버에 넘겨서 로그인되어있는지(토큰을 받아서 JWT 유효한지 확인)
+            if (this.state.User.myToken) {
+                const token = login(this.state.User)
+                this.loggedIn(token)
             }
-            gapi.signin2.render('loginButton', opts)
-        });
     }
 
-
-
-        onSuccess()
-        {
-            console.log('on success')
-            this.setState({
-                isSignedIn: true,
-                err: null
-            })
-        }
-
-        onLoginFailed(err)
-        {
-            this.setState({
-                isSignedIn: false,
-                error: err,
-            })
-        }
-
-
-
-    checkSignedIn () {
-        if (this.state.isSignedIn){
-            return <p>hello user, you're signed in </p>
-        } else {
-
-            return (
-                <div className="App">
-                    <header className="App-header">
-                        <p>You are not signed in. Click here to sign in.</p>
-                        <button id="loginButton">Login with Google</button>
-                    </header>
-                </div>
-            )
-        }
+    loggedIn = (token)  => {
+         this.setState({
+            isSignedIn: true,
+            token: token,
+            user: null
+         })
     }
 
-    checkRegister (User) {
-      // Headers
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      // Request Body
-      const body = JSON.stringify(User);
-      console.log(body);
-      debugger;
-      try {
-        const res = axios.post('https://127.0.0.1:5000/login', body, config);
-
-      } catch (err) {
-         console.log(err.response.data);
-      }
+    logout = () => {
+        this.setState({
+            isSignedIn: false,
+            token: '',
+            user: null})
     };
 
+    responseGoogle = (response)  => {
+        const user = {
+            email: response.Qt.zu,
+            id: response.Qt.SU,
+            // googleToken: response.uc,
+            token:''
+        }
+        console.log(user.email, user.id, user.token);
+        console.log(response);
 
+        const token = login(user)
+        if (token.Empty) {
+            console.log("error im here")
+            console.log(user.email, user.id, user.token);
+            this.onFailure()
+        } else {
+            this.loggedIn(token)
+            console.log(user.email, user.id, user.token);
+        }
+    }
+
+    onFailure = () => {
+        this.setState({
+            isSignedIn: false,
+        })
+    }
 
     render() {
+        let content = !!this.state.isSignedIn ?
+            (
+                <div>
+                    <p>Authenticated</p>
+                    <button onClick={this.logout} className="button">
+                        Log out
+                    </button>
+
+                </div>
+            ) :
+            (
+                <div>
+                     <GoogleLogin
+                        clientId={process.env.REACT_APP_CLIENT_ID}
+                        onSuccess={this.responseGoogle}
+                        onFailure={this.onFailure}
+                        scope = 'https://www.googleapis.com/auth/calendar'
+                      />
+                </div>
+            );
+
         return(
         <div className="App">
           <header className="App-header">
             <h2>Sample App.</h2>
-            {this.checkSignedIn()}
+            {content}
           </header>
         </div>
         )
