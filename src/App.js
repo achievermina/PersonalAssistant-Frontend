@@ -1,16 +1,19 @@
-/* global gapi */
 import React from 'react';
 import './App.css';
-import 'gapi';
 import Cookies from 'js-cookie';
+import { Grid } from '@material-ui/core'
+import { SearchBar} from './components'
 import {login} from './components/UserFunction'
 import GoogleLogin from "react-google-login";
+
+
+import MainTemplate from './components/MainTemplate'
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                isSignedIn: false,//localStorage.getItem('token') ? true : false,
+                isSignedIn: false,//localStorage.getItem('myToken') ? true : false,
                 User: {
                     email: '',
                     id:'',
@@ -32,7 +35,7 @@ class App extends React.Component{
     loggedIn = (token)  => {
          this.setState({
             isSignedIn: true,
-            token: token,
+            myToken: token,
             user: null
          })
     }
@@ -40,7 +43,7 @@ class App extends React.Component{
     logout = () => {
         this.setState({
             isSignedIn: false,
-            token: '',
+            myToken: '',
             user: null})
     };
 
@@ -48,20 +51,20 @@ class App extends React.Component{
         const user = {
             email: response.Qt.zu,
             id: response.Qt.SU,
-            // googleToken: response.uc,
-            token:''
+            googleToken: response.tokenObj.id_token,
+            myToken:''
         }
-        console.log(user.email, user.id, user.token);
+        console.log(user.email, user.id, user.googleToken);
         console.log(response);
 
         const token = login(user)
         if (token.Empty) {
             console.log("error im here")
-            console.log(user.email, user.id, user.token);
+            console.log(user.email, user.id, user.myToken);
             this.onFailure()
         } else {
             this.loggedIn(token)
-            console.log(user.email, user.id, user.token);
+            console.log(user.email, user.id, user.myToken);
         }
     }
 
@@ -71,16 +74,40 @@ class App extends React.Component{
         })
     }
 
+   handleSearchSubmit = (searchTerm) => {
+        console.log("handle search submit")
+        // const response = await youtube.get('search',{
+        //     params: {
+        //         part: 'snippet',
+        //         maxResults: 5,
+        //         key: '[YOUTUBE KEY]',
+        //         q:searchTerm
+        //     }
+        // });
+        // console.log(response.data.items);
+        //
+        // this.setState({videos: response.data.items, selectedVideo: response.data.items[0]});
+    }
+
     render() {
         let content = !!this.state.isSignedIn ?
             (
-                <div>
-                    <p>Authenticated</p>
-                    <button onClick={this.logout} className="button">
-                        Log out
-                    </button>
+            <Grid justify = "center"  container spacing = {10}>
+                <Grid item xs = {10}>
+                    <Grid container spacing = {10}>
+                        <Grid item xs = {5}>
+                            <SearchBar onFormSubmit={this.handleSearchSubmit}/>
+                        </Grid>
+                        <Grid item xs = {5}>
+                            <h2>item2</h2>
+                        </Grid>
+                        <Grid item xs = {4}>
+                            <h2>item3</h2>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+            </Grid>
 
-                </div>
             ) :
             (
                 <div>
