@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 import { Grid } from '@material-ui/core'
 import { SearchBar} from './components'
 import {login} from './components/UserFunction'
+import {searchJob} from './components/IndeedClone'
+
 import GoogleLogin from "react-google-login";
 
 
@@ -49,8 +51,8 @@ class App extends React.Component{
 
     responseGoogle = (response)  => {
         const user = {
-            email: response.Qt.zu,
-            id: response.Qt.SU,
+            email: response.profileObj.email,
+            id: response.profileObj.googleId,
             googleToken: response.tokenObj.id_token,
             myToken:''
         }
@@ -89,6 +91,11 @@ class App extends React.Component{
         // this.setState({videos: response.data.items, selectedVideo: response.data.items[0]});
     }
 
+   handleIndeedClone = (searchTerm) => {
+        console.log("handle search submit")
+        const jobList = searchJob(searchTerm)
+    }
+
     render() {
         let content = !!this.state.isSignedIn ?
             (
@@ -101,11 +108,15 @@ class App extends React.Component{
                         <Grid item xs = {5}>
                             <h2>item2</h2>
                         </Grid>
-                        <Grid item xs = {4}>
+                        <Grid item xs = {5}>
                             <h2>item3</h2>
-                            </Grid>
+                        </Grid>
+                        <Grid item xs = {5}>
+                            <h2>IndeedClone</h2>
+                            <SearchBar onFormSubmit={this.handleIndeedClone}/>
                         </Grid>
                     </Grid>
+                </Grid>
             </Grid>
 
             ) :
