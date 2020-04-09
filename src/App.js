@@ -1,85 +1,130 @@
-/* global gapi */
 import React from 'react';
 import './App.css';
-import 'gapi';
+import Cookies from 'js-cookie';
+import { Grid } from '@material-ui/core'
+import { SearchBar} from './components'
+import {login} from './components/UserFunction'
+import GoogleLogin from "react-google-login";
 
+
+import MainTemplate from './components/MainTemplate'
 
 class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                isSignedIn: false,
+                isSignedIn: false,//localStorage.getItem('myToken') ? true : false,
+                User: {
+                    email: '',
+                    id:'',
+                    name:'',
+                    myToken: Cookies.get('myToken')
+                }
             }
-            console.log(this.state.isSignedIn);
     }
 
     componentDidMount() {
-        const successCallback = this.onSuccess.bind(this);
-
-        window.gapi.load('auth2', () => {
-            this.auth2 = gapi.auth2.init({
-                client_id: process.env.REACT_APP_CLIENT_ID,
-                discoveryDocs: ['https://accounts.google.com/.well-known/openid-configuration' ],
-                scope: 'https://www.googleapis.com/auth/calendar'
-            }).then(() => {
-                console.log('on init');
-                this.setState({
-                  isSignedIn: this.auth2.isSignedIn.get(),
-                });
-        })
-      });
-
-        window.gapi.load('signin2', function() {
-          // Method 3: render a sign in button
-          // using this method will show Signed In if the user is already signed in
-          var opts = {
-            width: 200,
-            height: 50,
-            client_id: process.env.REACT_APP_CLIENT_ID,
-            onsuccess: successCallback
-          }
-          gapi.signin2.render('loginButton', opts)
-        })
+            //우리서버에 확인
+            //local storage 에서 마이토큰 가져와 -> 우리서버에 넘겨서 로그인되어있는지(토큰을 받아서 JWT 유효한지 확인)
+            if (this.state.User.myToken) {
+                const token = login(this.state.User)
+                this.loggedIn(token)
+            }
     }
 
-    onSuccess() {
-        console.log('on success')
+    loggedIn = (token)  => {
+         this.setState({
+            isSignedIn: true,
+            myToken: token,
+            user: null
+         })
+    }
+
+    logout = () => {
         this.setState({
-          isSignedIn: true,
-          err: null
-        })
-    }
+            isSignedIn: false,
+            myToken: '',
+            user: null})
+    };
 
-    onLoginFailed(err) {
-    this.setState({
-      isSignedIn: false,
-      error: err,
-    })
-  }
+    responseGoogle = (response)  => {
+        const user = {
+            email: response.Qt.zu,
+            id: response.Qt.SU,
+            googleToken: response.tokenObj.id_token,
+            myToken:''
+        }
+        console.log(user.email, user.id, user.googleToken);
+        console.log(response);
 
-
-
-    checkSignedIn () {
-        if (this.state.isSignedIn){
-            return <p>hello user, you're signed in </p>
+        const token = login(user)
+        if (token.Empty) {
+            console.log("error im here")
+            console.log(user.email, user.id, user.myToken);
+            this.onFailure()
         } else {
-
-            return (
-                <div className="App">
-                    <header className="App-header">
-                        <p>You are not signed in. Click here to sign in.</p>
-                        <button id="loginButton">Login with Google</button>
-                    </header>
-                </div>
-            )
+            this.loggedIn(token)
+            console.log(user.email, user.id, user.myToken);
         }
     }
+
+    onFailure = () => {
+        this.setState({
+            isSignedIn: false,
+        })
+    }
+
+   handleSearchSubmit = (searchTerm) => {
+        console.log("handle search submit")
+        // const response = await youtube.get('search',{
+        //     params: {
+        //         part: 'snippet',
+        //         maxResults: 5,
+        //         key: '[YOUTUBE KEY]',
+        //         q:searchTerm
+        //     }
+        // });
+        // console.log(response.data.items);
+        //
+        // this.setState({videos: response.data.items, selectedVideo: response.data.items[0]});
+    }
+
     render() {
+        let content = !!this.state.isSignedIn ?
+            (
+            <Grid justify = "center"  container spacing = {10}>
+                <Grid item xs = {10}>
+                    <Grid container spacing = {10}>
+                        <Grid item xs = {5}>
+                            <SearchBar onFormSubmit={this.handleSearchSubmit}/>
+                        </Grid>
+                        <Grid item xs = {5}>
+                            <h2>item2</h2>
+                        </Grid>
+                        <Grid item xs = {4}>
+                            <h2>item3</h2>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+            </Grid>
+
+            ) :
+            (
+                <div>
+                     <GoogleLogin
+                        clientId={process.env.REACT_APP_CLIENT_ID}
+                        onSuccess={this.responseGoogle}
+                        onFailure={this.onFailure}
+                        scope = 'https://www.googleapis.com/auth/calendar'
+                      />
+                </div>
+            );
+
         return(
         <div className="App">
           <header className="App-header">
             <h2>Sample App.</h2>
-            {this.checkSignedIn()}
+            {content}
           </header>
         </div>
         )
