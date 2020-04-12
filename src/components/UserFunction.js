@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 
 export const login = (User) => {
-        // debugger;
+        debugger;
 
     return axios
         .post("http://127.0.0.1:5000/login", {
@@ -13,7 +13,8 @@ export const login = (User) => {
         })
         .then(response => {
             Cookies.set('myToken', response.data.myToken, { expires: 7 })
-            return response.data.myToken
+            debugger;
+            return [response.data.user, response.data.myToken]
         })
         .catch(err => {
             console.log(err)

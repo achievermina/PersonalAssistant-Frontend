@@ -28,17 +28,16 @@ class App extends React.Component{
     componentDidMount() {
             //우리서버에 확인
             //local storage 에서 마이토큰 가져와 -> 우리서버에 넘겨서 로그인되어있는지(토큰을 받아서 JWT 유효한지 확인)
-            if (this.state.User.myToken) {
+            if (this.state.User.myToken != "undefined") {
                 const token = login(this.state.User)
                 this.loggedIn(token)
             }
     }
 
-    loggedIn = (token)  => {
+    loggedIn = (token, newUser)  => {
          this.setState({
             isSignedIn: true,
-            myToken: token,
-            user: null
+            User: newUser
          })
     }
 
@@ -50,6 +49,7 @@ class App extends React.Component{
     };
 
     responseGoogle = (response)  => {
+        debugger
         const user = {
             email: response.profileObj.email,
             id: response.profileObj.googleId,
@@ -59,13 +59,23 @@ class App extends React.Component{
         console.log(user.email, user.id, user.googleToken);
         console.log(response);
 
-        const token = login(user)
-        if (token.Empty) {
+        const result = login(user)
+        debugger
+
+        const loggedInUser = result[0]
+        const token = result[1]
+        if (token == undefined) {
             console.log("error im here")
             console.log(user.email, user.id, user.myToken);
             this.onFailure()
         } else {
-            this.loggedIn(token)
+            const newStateUser = {
+                    email:loggedInUser["email"],
+                    id:loggedInUser["id"],
+                    name:loggedInUser["name"],
+                    myToken: token
+            }
+            this.loggedIn(token, newStateUser)
             console.log(user.email, user.id, user.myToken);
         }
     }
