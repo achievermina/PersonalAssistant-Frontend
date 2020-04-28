@@ -16,7 +16,6 @@ class App extends React.Component{
     constructor(props){
             super(props);
             this.state = {
-                // isSignedIn: false,//localStorage.getItem('myToken') ? true : false,
                 User: {
                     email: '',
                     id:'',
@@ -27,14 +26,23 @@ class App extends React.Component{
     }
 
     componentDidMount() {
-            //우리서버에 확인
-            //local storage 에서 마이토큰 가져와 -> 우리서버에 넘겨서 로그인되어있는지(토큰을 받아서 JWT 유효한지 확인)
-            if (this.state.User.myToken !== undefined) {
-                const user = cookielogin(this.state.User)
-                this.loggedIn(user.myToken, user)
-            } //else {
-            //     //
-            // }
+        const curToken = this.state.User.myToken;
+        if (curToken !== undefined) {
+            const res = cookielogin(curToken)
+                    debugger;
+
+            if(curToken == res.token){
+                const curUser =  {
+                    email: res.user.email,
+                    id: res.user.id,
+                    name:res.user.email,
+                    myToken: res.token
+                }
+                this.loggedIn(curToken, curUser)
+            }else{
+                this.onFailure();
+            }
+        }
     }
 
     loggedIn = (token, newUser)  => {
@@ -63,6 +71,7 @@ class App extends React.Component{
         console.log(response);
 
         const result = await newlogin(user)
+         debugger;
          if(result[0] == false){
              console.log("error im here");
             this.onFailure()
@@ -84,61 +93,8 @@ class App extends React.Component{
     }
 
 
-    //////// 질문.
-    // responseGoogle = (response)  => {
-    //     debugger
-    //     const user = {
-    //         email: response.profileObj.email,
-    //         id: response.profileObj.googleId,
-    //         googleToken: response.tokenObj.id_token,
-    //         myToken:''
-    //     }
-    //     console.log(user.email, user.id, user.googleToken);
-    //     console.log(response);
-    //
-    //     // newlogin(user)
-    //     const request = axios.post("http://127.0.0.1:5000/login", {
-    //         googleToken: user.googleToken,
-    //         email: user.email,
-    //         myToken: user.myToken
-    //     })
-    //     console.log(user.email, user.id, user.myToken);
-    //
-    //     request.then(response => {
-    //         debugger;
-    //         if (response.data.ok == false) {
-    //             throw new Error("response undefined")
-    //             this.loginUser([undefined, undefined])
-    //         }
-    //         Cookies.set('myToken', response.data.myToken, {expires: 7})
-    //         this.loginUser([response.data.user, response.data.myToken])
-    //     }).catch(error => console.error(error))
-    // }
-    //
-    // loginUser = (result) => {
-    //     debugger
-    //
-    //     const loggedInUser = result[0]
-    //     const token = result[1]
-    //     if (token == undefined) {
-    //         console.log("error im here")
-    //         this.onFailure()
-    //     } else {
-    //         const newStateUser = {
-    //                 email:loggedInUser["email"],
-    //                 id:loggedInUser["id"],
-    //                 name:loggedInUser["name"],
-    //                 myToken: token
-    //         }
-    //         this.loggedIn(token, newStateUser)
-    //         // console.log(user.email, user.id, user.myToken);
-    //     }
-    // }
-
-
     onFailure = () => {
         this.setState({
-            // isSignedIn: false,
             User: {
                     email: '',
                     id:'',
@@ -170,8 +126,7 @@ class App extends React.Component{
     }
 
     render() {
-         let content = (this.state.User.myToken !== undefined) ?
-        // let content = !!this.state.isSignedIn ?  // this.state.User.myToken !== undefined
+         let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "" ) ?
             (
             <Grid justify = "center"  container spacing = {10}>
                 <Grid item xs = {10}>

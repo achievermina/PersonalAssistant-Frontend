@@ -4,7 +4,6 @@ import {loginUser} from '../App.js'
 
 
 export const newlogin = (User) => {
-    debugger
     return axios.post("http://127.0.0.1:5000/login", {
         googleToken: User.googleToken,
         email: User.email,
@@ -13,10 +12,10 @@ export const newlogin = (User) => {
     ).catch(error => console.error(error))
 }
 
-export const cookielogin = (User) => {
-    return axios.get("http://127.0.0.1:5000/cookielogin", {
-        jwtToken: User.myToken
-    }).then(response => response.data.user
+export const cookielogin = (token) => {
+    return axios.post("http://127.0.0.1:5000/cookielogin", {
+        jwt: token
+    }).then(response => response.data
     ).catch(error => console.error(error))
 }
 
