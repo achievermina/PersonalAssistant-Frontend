@@ -25,12 +25,11 @@ class App extends React.Component{
             }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const curToken = this.state.User.myToken;
         if (curToken !== undefined) {
-            const res = cookielogin(curToken)
-                    debugger;
-
+            const res =  await cookielogin(curToken)
+            debugger
             if(curToken == res.token){
                 const curUser =  {
                     email: res.user.email,
@@ -71,7 +70,6 @@ class App extends React.Component{
         console.log(response);
 
         const result = await newlogin(user)
-         debugger;
          if(result[0] == false){
              console.log("error im here");
             this.onFailure()
@@ -87,9 +85,6 @@ class App extends React.Component{
             this.loggedIn(token, newStateUser)
              console.log(user.email, user.id, user.myToken);
         }
-
-
-
     }
 
 

@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 import {loginUser} from '../App.js'
 
 
-export const newlogin = (User) => {
-    return axios.post("http://127.0.0.1:5000/login", {
+export const newlogin = async (User) => {
+    return await axios.post("http://127.0.0.1:5000/login", {
         googleToken: User.googleToken,
         email: User.email,
         myToken: User.myToken
@@ -12,12 +12,12 @@ export const newlogin = (User) => {
     ).catch(error => console.error(error))
 }
 
-export const cookielogin = (token) => {
-    return axios.post("http://127.0.0.1:5000/cookielogin", {
+export const cookielogin = async (token) => {
+    return await axios.post("http://127.0.0.1:5000/cookielogin", {
         jwt: token
     }).then(response => response.data
     ).catch(error => console.error(error))
-}
+};
 
 export const calendar = (User) => {
     return axios
@@ -26,14 +26,14 @@ export const calendar = (User) => {
             email: User.email,
             myToken: User.myToken,
         }).then(response => {
-            Cookies.set('myToken', response.data.myToken, { expires: 7 })
+            Cookies.set('myToken', response.data.myToken, { expires: 7 });
             return response.data.myToken
         })
         .catch(err => {
-            console.log(err)
+            console.log(err);
             return ""
         })
-}
+};
 
 
 
