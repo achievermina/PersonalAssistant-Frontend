@@ -3,7 +3,7 @@ import './App.css';
 import Cookies from 'js-cookie';
 import { Grid } from '@material-ui/core'
 import { SearchBar} from './components'
-import {newlogin, cookielogin, get_calendar_event} from './components/UserFunction'
+import {newlogin, cookielogin} from './components/UserFunction'
 import {searchJob} from './components/IndeedClone'
 import {CalendarEventList} from './components/Calendar'
 import {youtube, VideoList, VideoItem} from './components/Video'
@@ -34,6 +34,7 @@ class App extends React.Component{
 
     async componentDidMount() {
         const curToken = this.state.User.myToken;
+        // debugger
         if (curToken !== undefined) {
             const res =  await cookielogin(curToken)
             if(curToken === res.token){
@@ -43,8 +44,8 @@ class App extends React.Component{
                     name:res.user.email,
                     myToken: res.token
                 }
+                this.handleCalendar(res.calendar)
                 this.loggedIn(curToken, curUser)
-                this.handleCalendar(curToken)
             }else{
                 this.onFailure();
             }
@@ -75,7 +76,6 @@ class App extends React.Component{
         }
         console.log(user.email, user.id, user.googleToken, user.accessToken);
         console.log(response);
-
         const result = await newlogin(user);
          if(result[0] == false){
              console.log("error im here");
@@ -83,9 +83,8 @@ class App extends React.Component{
          }else{
              const token = result[1]
              Cookies.set('myToken', token, {expires: 7})
-
-             const events = result[0]
-             this.setState({ Calendar: events})
+             const events = result[2]
+             this.handleCalendar(events)
              const newStateUser = {
                     email:user.email,
                     id: user.id,
@@ -131,14 +130,18 @@ class App extends React.Component{
         const jobList = await searchJob(searchTerm)
     }
 
-    handleCalendar = async (token) => {
-         get_calendar_event(token);
+    handleCalendar = (calendar) => {
          console.log("get calendar events")
+        const userCalendar = {
+             events: calendar.items
+        }
+         this.setState({ Calendar: userCalendar})
+        console.log(calendar.items)
     }
 
     render() {
          const { videos } = this.state.Videos;
-         const { calendar } = this.state.Calendar;
+         const { events } = this.state.Calendar;
          let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "" ) ?
             (
             <Grid justify = "center"  container spacing = {10}>
@@ -151,7 +154,7 @@ class App extends React.Component{
                         </Grid>
                         <Grid item xs = {5}>
                             <h2>Schedule</h2>
-                            <CalendarEventList events = {calendar}/>
+                            <CalendarEventList events = {events}/>
                         </Grid>
                         <Grid item xs = {5}>
                             <h2>Chatbot</h2>
