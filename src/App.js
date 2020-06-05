@@ -4,9 +4,9 @@ import Cookies from 'js-cookie';
 import { Grid } from '@material-ui/core'
 import { SearchBar} from './components'
 import {newlogin, cookielogin} from './components/UserFunction'
-import {searchJob} from './components/IndeedClone'
+import {searchJob, showJobList} from './components/IndeedClone'
 import {CalendarEventList} from './components/Calendar'
-import {youtube, VideoList, VideoItem} from './components/Video'
+import {youtube, VideoList} from './components/Video'
 
 import GoogleLogin from "react-google-login";
 
@@ -28,7 +28,8 @@ class App extends React.Component{
                 },
                 Calendar: {
                     events: [],
-                }
+                },
+                Jobs: [],
             }
     }
 
@@ -77,7 +78,7 @@ class App extends React.Component{
         console.log(user.email, user.id, user.googleToken, user.accessToken);
         console.log(response);
         const result = await newlogin(user);
-         if(result[0] == false){
+         if(result[0] === false){
              console.log("error im here");
             this.onFailure()
          }else{
@@ -118,16 +119,16 @@ class App extends React.Component{
      }
 
    onVideoSelect = (video) => {
-         // window.open(video.snippet.thumbnails.medium.url, "_blank")
        window.open("https://www.youtube.com/watch?v="+video.id.videoId, "_blank")
-
         this.setState({selectedVideo: video})
     }
 
    handleIndeedClone = async (searchTerm) => {
-        console.log("job Search")
-       // debugger;
+        console.log("job Search", searchTerm)
         const jobList = await searchJob(searchTerm)
+        console.log(jobList);
+        //여기 이렇게 state 이용안하고 이 잡리스트를 그냥 바로 저기에 사용 할수는 없는??
+        this.setState({Jobs: jobList})
     }
 
     handleCalendar = (calendar) => {
@@ -142,6 +143,7 @@ class App extends React.Component{
     render() {
          const { videos } = this.state.Videos;
          const { events } = this.state.Calendar;
+         const { Jobs } = this.state;
          let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "" ) ?
             (
             <Grid justify = "center"  container spacing = {10}>
@@ -158,12 +160,13 @@ class App extends React.Component{
                         </Grid>
                         <Grid item xs = {5}>
                             <h2>Chatbot</h2>
+                            <iframe height="430" width="500" src="https://bot.dialogflow.com/976ecf3a-8016-4dc1-8005-ffafd7f0ce82"></iframe>
                         </Grid>
                         <Grid item xs = {5}>
                             <h2>Indeed Job Search</h2>
                             <SearchBar onFormSubmit={this.handleIndeedClone}/>
+                            <showJobList jobList={Jobs}/>
                         </Grid>
-                        <iframe height="430" width="500" src="https://bot.dialogflow.com/976ecf3a-8016-4dc1-8005-ffafd7f0ce82"></iframe>
                     </Grid>
                 </Grid>
             </Grid>

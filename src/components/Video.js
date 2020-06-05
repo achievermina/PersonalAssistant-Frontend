@@ -28,6 +28,7 @@ export const youtube = async (term) => {
 }
 
 export const VideoList = ({videos, onVideoSelect}) => {
+    // debugger
     const listOfVideos = videos.map((video, id) => <VideoItem onVideoSelect={onVideoSelect} key={id} video={video} />)
     return (
         <Grid container spacing={2}>

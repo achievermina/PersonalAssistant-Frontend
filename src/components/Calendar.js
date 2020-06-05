@@ -1,6 +1,5 @@
-import {Grid, Paper, Typography} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import React from "react";
-import dateFormat from 'dateformat';
 
 export const CalendarEventList = ({events}) => {
     if (events === undefined) {

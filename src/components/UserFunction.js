@@ -1,7 +1,4 @@
 import axios from 'axios'
-import Cookies from 'js-cookie';
-import {loginUser} from '../App.js'
-
 
 export const newlogin = async (User) => {
     return await axios.post("http://127.0.0.1:5000/login", {
@@ -23,16 +20,16 @@ export const cookielogin = async (token) => {
     })
 };
 
-export const get_calendar_event = async (token) => {
-    return await axios
-        .get("http://127.0.0.1:5000/calendar", {
-            params:{
-                token:token
-            }
-        }).then(response => response)
-        .catch(err => {
-            console.log(err);
-            return ""
-        })
-};
+// export const get_calendar_event = async (token) => {
+//     return await axios
+//         .get("http://127.0.0.1:5000/calendar", {
+//             params:{
+//                 token:token
+//             }
+//         }).then(response => response)
+//         .catch(err => {
+//             console.log(err);
+//             return ""
+//         })
+// };
 
