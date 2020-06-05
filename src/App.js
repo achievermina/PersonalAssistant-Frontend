@@ -160,7 +160,7 @@ class App extends React.Component{
                             <h2>Chatbot</h2>
                         </Grid>
                         <Grid item xs = {5}>
-                            <h2>IndeedClone</h2>
+                            <h2>Indeed Job Search</h2>
                             <SearchBar onFormSubmit={this.handleIndeedClone}/>
                         </Grid>
                         <iframe height="430" width="500" src="https://bot.dialogflow.com/976ecf3a-8016-4dc1-8005-ffafd7f0ce82"></iframe>

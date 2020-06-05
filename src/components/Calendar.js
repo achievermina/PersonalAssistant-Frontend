@@ -1,9 +1,8 @@
 import {Grid, Paper, Typography} from "@material-ui/core";
 import React from "react";
+import dateFormat from 'dateformat';
 
 export const CalendarEventList = ({events}) => {
-    // debugger;
-    // const listOfEvents = null;
     if (events === undefined) {
         return null;
     }
@@ -17,9 +16,13 @@ export const CalendarEventList = ({events}) => {
 
 export const EventListItem = ({event}) => {
     const {summary, start} = event;
+    const eventDate = new Date(start.dateTime);
+    var options = { month: 'numeric', day: 'numeric', hour: 'numeric', hour12: true};
+    const timeString = eventDate.toLocaleString('en-US', options);
+
     return (
         <Grid item xs={12}>
-            <Typography variant={"title"}><b>{summary}</b><b>{start.dateTime}</b></Typography>
+            <Typography variant={"title"}><b>{timeString}</b>:   <b>{summary}</b> </Typography>
         </Grid>
     )
 }
