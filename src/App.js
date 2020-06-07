@@ -2,13 +2,13 @@ import React from 'react';
 import './App.css';
 import Cookies from 'js-cookie';
 import { Grid } from '@material-ui/core'
-import { SearchBar} from './components'
-import {newlogin, cookielogin} from './components/UserFunction'
-import {searchJob, showJobList} from './components/IndeedClone'
-import {CalendarEventList} from './components/Calendar'
-import {youtube, VideoList} from './components/Video'
-
 import GoogleLogin from "react-google-login";
+
+import {SearchBar} from './Components/'
+import {newlogin, cookielogin} from './Components/UserFunction'
+import {searchJob, showJobList} from './Components/IndeedClone'
+import {CalendarEventList} from './Components/Calendar'
+import {youtube, VideoList} from './Components/Video'
 
 const SCOPES = 'profile email https://www.googleapis.com/auth/calendar'
 

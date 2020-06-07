@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const newlogin = async (User) => {
-    return await axios.post("http://127.0.0.1:5000/login", {
+    return await axios.post(process.env.REACT_APP_BACKEND_LOGIN_ENDPOINT, {
         googleToken: User.googleToken,
         accessToken: User.accessToken,
         email: User.email,
@@ -11,7 +11,7 @@ export const newlogin = async (User) => {
 }
 
 export const cookielogin = async (token) => {
-    return await axios.post("http://127.0.0.1:5000/cookielogin", {
+    return await axios.post(process.env.REACT_APP_BACKEND_COOKIELOGIN_ENDPOINT, {
         jwt: token
     }).then(response => response.data
     ).catch(error => {
@@ -19,17 +19,3 @@ export const cookielogin = async (token) => {
         return "";
     })
 };
-
-// export const get_calendar_event = async (token) => {
-//     return await axios
-//         .get("http://127.0.0.1:5000/calendar", {
-//             params:{
-//                 token:token
-//             }
-//         }).then(response => response)
-//         .catch(err => {
-//             console.log(err);
-//             return ""
-//         })
-// };
-

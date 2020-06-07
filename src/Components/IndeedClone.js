@@ -4,7 +4,7 @@ import React from "react";
 
 export const searchJob = async (searchTerm) => {
     return await axios
-        .post("http://127.0.0.1:5000/indeedclone", {
+        .post(process.env.REACT_APP_INDEEDCLONE_APP_ENDPOINT, {
             "term":searchTerm,
         })
         .then(response => {
