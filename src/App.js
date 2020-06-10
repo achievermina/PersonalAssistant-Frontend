@@ -6,7 +6,7 @@ import GoogleLogin from "react-google-login";
 
 import {SearchBar} from './Components/'
 import {newlogin, cookielogin} from './Components/UserFunction'
-import {searchJob, showJobList} from './Components/IndeedClone'
+import {searchJob, ShowJobList} from './Components/IndeedClone'
 import {CalendarEventList} from './Components/Calendar'
 import {youtube, VideoList} from './Components/Video'
 
@@ -70,16 +70,15 @@ class App extends React.Component{
             email: response.profileObj.email,
             id: response.profileObj.googleId,
             name: response.profileObj.name,
-            googleToken: response.tokenObj.id_token,
-            accessToken: response.tokenObj.access_token,
+            googleExchangeToken: response.tokenObj.id_token,
+            googleAccessToken: response.tokenObj.access_token,
             googleExpiresAt: response.tokenObj.expires_at,
             myToken:''
         }
-        console.log(user.email, user.id, user.googleToken, user.accessToken);
+        console.log(user.email, user.id, user.googleExchangeToken, user.googleAccessToken);
         console.log(response);
         const result = await newlogin(user);
          if(result[0] === false){
-             console.log("error im here");
             this.onFailure()
          }else{
              const token = result[1]
@@ -96,7 +95,6 @@ class App extends React.Component{
              console.log(user.email, user.id, user.myToken);
         }
     }
-
 
     onFailure = () => {
         this.setState({
@@ -126,8 +124,6 @@ class App extends React.Component{
    handleIndeedClone = async (searchTerm) => {
         console.log("job Search", searchTerm)
         const jobList = await searchJob(searchTerm)
-        console.log(jobList);
-        //여기 이렇게 state 이용안하고 이 잡리스트를 그냥 바로 저기에 사용 할수는 없는??
         this.setState({Jobs: jobList})
     }
 
@@ -137,13 +133,13 @@ class App extends React.Component{
              events: calendar.items
         }
          this.setState({ Calendar: userCalendar})
-        console.log(calendar.items)
     }
 
     render() {
          const { videos } = this.state.Videos;
          const { events } = this.state.Calendar;
          const { Jobs } = this.state;
+         // debugger;
          let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "" ) ?
             (
             <Grid justify = "center"  container spacing = {10}>
@@ -165,7 +161,7 @@ class App extends React.Component{
                         <Grid item xs = {5}>
                             <h2>Indeed Job Search</h2>
                             <SearchBar onFormSubmit={this.handleIndeedClone}/>
-                            <showJobList jobList={Jobs}/>
+                            <ShowJobList jobList = {Jobs}/>
                         </Grid>
                     </Grid>
                 </Grid>

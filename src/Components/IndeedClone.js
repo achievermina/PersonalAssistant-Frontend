@@ -17,26 +17,8 @@ export const searchJob = async (searchTerm) => {
         })
 }
 
-// export const showJobList = ({jobList}) => {
-//     debugger;
-//     // if (jobList === undefined) {
-//     //     return null;
-//     // }
-//     const listOfJobs = jobList.map(job => <Grid item xs={12}><Typography variant={"title"}><b>{job.title}</b><b>{job.summary}</b> </Typography></Grid>)
-//     return (
-//         <Grid container spacing={2}>
-//             {listOfJobs}
-//         </Grid>
-//     )
-// }
-
-
-export const showJobList = ({jobList}) => {
-    // if (jobList === undefined) {
-    //     return null;
-    // }
+export const ShowJobList = ({jobList}) => {
     const listItems = jobList.map((d) => <li key={d.id}>{d.title}, {d.summary}</li>);
-
     return (
       <div>
         {listItems}
