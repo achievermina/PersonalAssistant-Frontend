@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export const newlogin = async (User) => {
     return await axios.post(process.env.REACT_APP_BACKEND_LOGIN_ENDPOINT, {
-        googleToken: User.googleToken,
-        accessToken: User.accessToken,
+        googleExchangeToken: User.googleExchangeToken,
+        googleAccessToken: User.googleAccessToken,
         email: User.email,
         myToken: User.myToken
     }).then(response => [response.data.ok, response.data.token, response.data.calendar]
