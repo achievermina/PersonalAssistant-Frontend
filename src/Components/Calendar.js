@@ -7,9 +7,12 @@ export const CalendarEventList = ({events}) => {
     }
     const listOfEvents = events.map(event => <EventListItem event={event} key={event.id}/>)
     return (
-        <Grid container spacing={2}>
-            {listOfEvents}
-        </Grid>
+        // <Grid container spacing={2}>
+        //     {listOfEvents}
+        // </Grid>
+        <div className="w3-twothird">
+             {listOfEvents}
+        </div>
     )
 }
 

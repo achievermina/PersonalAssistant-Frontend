@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+@media  all{
+.MuiGrid-root.MuiGrid-container {
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

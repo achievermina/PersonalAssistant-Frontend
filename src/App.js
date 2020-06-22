@@ -142,30 +142,30 @@ class App extends React.Component{
          // debugger;
          let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "" ) ?
             (
-            <Grid justify = "center"  container spacing = {10}>
-                <Grid item xs = {10}>
-                    <Grid container spacing = {10}>
-                        <Grid item xs = {5}>
-                            <h2>Youtube</h2>
-                            <SearchBar onFormSubmit={this.handleSearchSubmit}/>
-                            <VideoList videos={videos} onVideoSelect={this.onVideoSelect}/>
-                        </Grid>
-                        <Grid item xs = {5}>
-                            <h2>Schedule</h2>
-                            <CalendarEventList events = {events}/>
-                        </Grid>
-                        <Grid item xs = {5}>
-                            <h2>Chatbot</h2>
-                            <iframe height="430" width="500" src="https://bot.dialogflow.com/976ecf3a-8016-4dc1-8005-ffafd7f0ce82"></iframe>
-                        </Grid>
-                        <Grid item xs = {5}>
-                            <h2>Indeed Job Search</h2>
-                            <SearchBar onFormSubmit={this.handleIndeedClone}/>
-                            <ShowJobList jobList = {Jobs}/>
-                        </Grid>
+                <div style={{ padding: 20, alignContent: "center"}}>
+                    <Grid container spacing = {10} center maxWidth={"1000"} >
+                            <Grid container center item xs={4}>
+                            {/*<div class={""}*/}
+                                <h2 style={{textAlign: "center"}}>Chatbot</h2>
+                                <iframe height="800" width="500"
+                                        src="https://bot.dialogflow.com/976ecf3a-8016-4dc1-8005-ffafd7f0ce82"></iframe>
+                            </Grid>
+                            <Grid container item xs={7}>
+                                <h2 style={{textAlign: "center"}}>Schedule</h2>
+                                <CalendarEventList events = {events}/>
+                            </Grid>
+                            <Grid item xs = {6}>
+                                <h2 >Youtube</h2>
+                                <SearchBar onFormSubmit={this.handleSearchSubmit} style={{alignContent: 'center'}}/>
+                                <VideoList videos={videos} onVideoSelect={this.onVideoSelect}/>
+                            </Grid>
+                            <Grid item xs = {6}>
+                                <h2>Indeed Job Search</h2>
+                                <SearchBar onFormSubmit={this.handleIndeedClone}/>
+                                <ShowJobList jobList = {Jobs}/>
+                            </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
+                </div>
 
             ) :
             (
