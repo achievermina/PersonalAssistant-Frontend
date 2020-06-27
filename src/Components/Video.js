@@ -31,7 +31,7 @@ export const VideoList = ({videos, onVideoSelect}) => {
     // debugger
     const listOfVideos = videos.map((video, id) => <VideoItem onVideoSelect={onVideoSelect} key={id} video={video} />)
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={12} >
             {listOfVideos}
         </Grid>
     )
@@ -40,7 +40,7 @@ export const VideoList = ({videos, onVideoSelect}) => {
 export const VideoItem = ({video, onVideoSelect}) => {
     // debugger
     return (
-        <Grid item xs={12}>
+        <Grid item xs={12} >
             <Paper style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={() => onVideoSelect(video)}>
                 <img style={{ marginRight:'20px' }} alt={"thumbnail"} src={video.snippet.thumbnails.medium.url}/>
                 <Typography variant={"subtitle1"}><b>{video.snippet.title}</b></Typography>

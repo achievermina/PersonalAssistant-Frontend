@@ -1,4 +1,4 @@
-import {Grid, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import React from "react";
 
 export const CalendarEventList = ({events}) => {
@@ -7,9 +7,6 @@ export const CalendarEventList = ({events}) => {
     }
     const listOfEvents = events.map(event => <EventListItem event={event} key={event.id}/>)
     return (
-        // <Grid container spacing={2}>
-        //     {listOfEvents}
-        // </Grid>
         <div className="w3-twothird">
              {listOfEvents}
         </div>
@@ -23,8 +20,8 @@ export const EventListItem = ({event}) => {
     const timeString = eventDate.toLocaleString('en-US', options);
 
     return (
-        <Grid item xs={12}>
+        <li style={{backgroundColor:'grey',textAlign:'left', lineHeight:'40px', paddingLeft:'12px', borderRadius:'8px', listStyleType:'circle', marginBottom:'8px'}} >
             <Typography variant={"title"}><b>{timeString}</b>:   <b>{summary}</b> </Typography>
-        </Grid>
+        </li>
     )
 }
