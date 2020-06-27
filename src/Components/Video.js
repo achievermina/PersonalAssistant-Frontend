@@ -28,17 +28,15 @@ export const youtube = async (term) => {
 }
 
 export const VideoList = ({videos, onVideoSelect}) => {
-    // debugger
     const listOfVideos = videos.map((video, id) => <VideoItem onVideoSelect={onVideoSelect} key={id} video={video} />)
     return (
-        <Grid container spacing={12} >
+        <Grid container spacing={12}  >
             {listOfVideos}
         </Grid>
     )
 }
 
 export const VideoItem = ({video, onVideoSelect}) => {
-    // debugger
     return (
         <Grid item xs={12} >
             <Paper style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={() => onVideoSelect(video)}>
@@ -46,6 +44,5 @@ export const VideoItem = ({video, onVideoSelect}) => {
                 <Typography variant={"subtitle1"}><b>{video.snippet.title}</b></Typography>
             </Paper>
         </Grid>
-
     )
 }

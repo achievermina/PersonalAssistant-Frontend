@@ -8,7 +8,7 @@ export const searchJob = async (searchTerm) => {
             "term": searchTerm,
         })
         .then(response => {
-            console.log(response.data.jobList.jobs)
+            // console.log(response.data.jobList.jobs)
             return response.data.jobList.jobs
         })
         .catch(err => {
@@ -19,9 +19,10 @@ export const searchJob = async (searchTerm) => {
 
 export const ShowJobList = ({jobList}) => {
     const listItems = jobList.map((d) =>
-        <ListItem key={d.id} >
-            Title :  {d.title},       <br></br>
-            Content : {d.summary}
+        <ListItem key={d.id} alignItems={"flex-start"} style={{flexDirection:'column'}}>
+            Title :  {d.title}, <br></br>
+             Location : {d.location}, <br></br>
+             <a style={{display:'inline-block'}} href={`https://www.indeed.com/jobs?q=Full Time&l=Brooklyn%2C NY&start=20&advn=3056737823750295&vjk=${d.id}`} target="_blank">LINK</a>
         </ListItem>
     );
     return (

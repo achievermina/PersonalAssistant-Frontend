@@ -7,7 +7,7 @@ export const CalendarEventList = ({events}) => {
     }
     const listOfEvents = events.map(event => <EventListItem event={event} key={event.id}/>)
     return (
-        <div className="w3-twothird">
+        <div className="w3-twothird" >
              {listOfEvents}
         </div>
     )
@@ -20,7 +20,7 @@ export const EventListItem = ({event}) => {
     const timeString = eventDate.toLocaleString('en-US', options);
 
     return (
-        <li style={{backgroundColor:'grey',textAlign:'left', lineHeight:'40px', paddingLeft:'12px', borderRadius:'8px', listStyleType:'circle', marginBottom:'8px'}} >
+        <li style={{padding: '12px', backgroundColor:'#e6ae8f',textAlign:'left', lineHeight:'40px', paddingLeft:'12px', borderRadius:'8px', listStyleType:'circle', marginBottom:'8px'}} >
             <Typography variant={"title"}><b>{timeString}</b>:   <b>{summary}</b> </Typography>
         </li>
     )

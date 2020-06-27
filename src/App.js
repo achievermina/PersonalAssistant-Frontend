@@ -78,12 +78,11 @@ class App extends React.Component {
             googleExpiresAt: response.tokenObj.expires_at,
             myToken: ''
         }
-        console.log(user.email, user.id, user.googleExchangeToken, user.googleAccessToken);
-        console.log(response);
         const result = await newlogin(user);
         if (result[0] === false) {
             this.onFailure()
         } else {
+            console.log(result)
             const token = result[1]
             Cookies.set('myToken', token, {expires: 7})
             const events = result[2]
@@ -95,7 +94,6 @@ class App extends React.Component {
                 myToken: token,
             }
             this.loggedIn(token, newStateUser)
-            console.log(user.email, user.id, user.myToken);
         }
     }
 
@@ -131,7 +129,6 @@ class App extends React.Component {
     }
 
     handleCalendar = (calendar) => {
-        console.log("get calendar events")
         const userCalendar = {
             events: calendar.items
         }
@@ -145,7 +142,7 @@ class App extends React.Component {
         // debugger;
         let content = (this.state.User.myToken !== undefined && this.state.User.myToken !== "") ?
             (
-                <div style={{padding: 20, alignContent: "center"}}>
+                <div style={{padding: 20, alignContent: "center", backgroundColor: "#ffc46b"}}>
                     <Grid container spacing={12}>
                         <Grid item xs={6} direction="column" spacing={12} style={{height: '90vh'}}>
                             <div item className={'grid1'}>
@@ -172,7 +169,7 @@ class App extends React.Component {
                         <Grid container item xs={6}>
                             <Grid container item direction="column">
                                 <h2 style={{textAlign: "center"}}>Schedule</h2>
-                                <CalendarEventList events={events}/>
+                                <CalendarEventList events={events} width={"12px"}/>
                             </Grid>
                         </Grid>
 
@@ -180,7 +177,6 @@ class App extends React.Component {
                         {this.state.isChatbotClicked ? (<div className={"chatbot"}>
                                 <Button variant="contained" color="primary" onClick={() => {
                                     this.setState({isChatbotClicked: false})
-                                    console.log(this.state.isChatbotClicked)
                                 }}>
                                     ChatBot
                                 </Button>
@@ -189,7 +185,6 @@ class App extends React.Component {
                             </div>)
                             : (<div className={'chatbot'}><Button variant="contained" color="primary" onClick={() => {
                                 this.setState({isChatbotClicked: true})
-                                console.log(this.state.isChatbotClicked)
                             }}>
                                 ChatBot
                             </Button></div>)}
@@ -200,7 +195,7 @@ class App extends React.Component {
 
             ) :
             (
-                <div style={{padding: 360, alignContent: "center", backgroundColor: "#282c34"}}>
+                <div style={{padding: 400, alignContent: "center", backgroundColor: "#ffc46b"}}>
                     <GoogleLogin
                         clientId={process.env.REACT_APP_CLIENT_ID}
                         onSuccess={this.responseGoogle}
