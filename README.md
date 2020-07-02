@@ -1,3 +1,3 @@
-##Personal Assistant
+##Personal Assistant - Frontend
 
 React.js 
