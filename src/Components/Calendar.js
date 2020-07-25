@@ -14,11 +14,18 @@ export const CalendarEventList = ({events}) => {
 }
 
 export const EventListItem = ({event}) => {
+    console.log(event)
     const {summary, start} = event;
-    const eventDate = new Date(start.dateTime);
-    var options = { month: 'numeric', day: 'numeric', hour: 'numeric', hour12: true};
-    const timeString = eventDate.toLocaleString('en-US', options);
-
+    try{
+        var eventDate = new Date(start.dateTime);
+        var options = { month: 'numeric', day: 'numeric', hour: 'numeric', hour12: true};
+        var timeString = eventDate.toLocaleString('en-US', options);
+    } catch (e) {
+        return (
+             <li style={{padding: '12px', backgroundColor:'#e6ae8f',textAlign:'left', lineHeight:'40px', paddingLeft:'12px', borderRadius:'8px', listStyleType:'circle', marginBottom:'8px'}} >
+            </li>
+        )
+    }
     return (
         <li style={{padding: '12px', backgroundColor:'#e6ae8f',textAlign:'left', lineHeight:'40px', paddingLeft:'12px', borderRadius:'8px', listStyleType:'circle', marginBottom:'8px'}} >
             <Typography variant={"title"}><b>{timeString}</b>:   <b>{summary}</b> </Typography>

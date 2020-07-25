@@ -38,18 +38,21 @@ class App extends React.Component {
 
     async componentDidMount() {
         const curToken = this.state.User.myToken;
-        // debugger
         if (curToken !== undefined) {
             const res = await cookielogin(curToken)
             if (curToken === res.token) {
-                const curUser = {
-                    email: res.user.email,
-                    id: res.user.id,
-                    name: res.user.email,
-                    myToken: res.token
+                if(Cookies.get('schedule') !== undefined) {
+                    this.handleCalendar(JSON.parse(Cookies.get("schedule")).events)
+                    const curUser = {
+                        email: res.user.email,
+                        id: res.user.id,
+                        name: res.user.email,
+                        myToken: res.token
+                    }
+                    this.loggedIn(curToken, curUser)
+                } else {
+                    Cookies.remove('myToken')
                 }
-                this.handleCalendar(res.calendar)
-                this.loggedIn(curToken, curUser)
             } else {
                 this.onFailure();
             }
@@ -84,9 +87,9 @@ class App extends React.Component {
         } else {
             console.log(result)
             const token = result[1]
-            Cookies.set('myToken', token, {expires: 7})
+            Cookies.set('myToken', token, {expires: 1})
             const events = result[2]
-            this.handleCalendar(events)
+            this.handleCalendar(events.items)
             const newStateUser = {
                 email: user.email,
                 id: user.id,
@@ -128,11 +131,14 @@ class App extends React.Component {
         this.setState({Jobs: jobList})
     }
 
-    handleCalendar = (calendar) => {
+    handleCalendar = (calendarItems) => {
+        debugger;
         const userCalendar = {
-            events: calendar.items
+            events: calendarItems
         }
         this.setState({Calendar: userCalendar})
+        debugger
+        Cookies.set('schedule', JSON.stringify(userCalendar), {expires: 1})
     }
 
     render() {
