@@ -3,18 +3,22 @@ import React from "react";
 import ListItem from '@material-ui/core/ListItem';
 
 export const searchJob = async (searchTerm) => {
-    return await axios
-        .post(process.env.REACT_APP_INDEEDCLONE_APP_ENDPOINT, {
-            "term": searchTerm,
-        })
-        .then(response => {
-            // console.log(response.data.jobList.jobs)
-            return response.data.jobList.jobs
-        })
-        .catch(err => {
-            console.log(err)
-            return ""
-        })
+    var letters = /^[A-Za-z]+$/;
+    if(searchTerm.match(letters)) {
+        return await axios
+            .post(process.env.REACT_APP_INDEEDCLONE_APP_ENDPOINT, {
+                "term": searchTerm,
+            })
+            .then(response => {
+                return response.data.jobList.jobs
+            })
+            .catch(err => {
+                console.log(err)
+                return ""
+            })
+    }
+    console.warn("Please use English and search again")
+    return []
 }
 
 export const ShowJobList = ({jobList}) => {
