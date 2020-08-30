@@ -16,7 +16,7 @@ Project is created with:
 
 ## Setup
 ```
-$ cd ../PersonalAssistant-frontend
+$ cd ../PersonalAssistant-Frontend
 $ npm start
 ```
 
