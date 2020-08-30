@@ -85,7 +85,6 @@ class App extends React.Component {
         if (result[0] === false) {
             this.onFailure()
         } else {
-            console.log(result)
             const token = result[1]
             Cookies.set('myToken', token, {expires: 1})
             const events = result[2]
@@ -132,12 +131,10 @@ class App extends React.Component {
     }
 
     handleCalendar = (calendarItems) => {
-        debugger;
         const userCalendar = {
             events: calendarItems
         }
         this.setState({Calendar: userCalendar})
-        debugger
         Cookies.set('schedule', JSON.stringify(userCalendar), {expires: 1})
     }
 

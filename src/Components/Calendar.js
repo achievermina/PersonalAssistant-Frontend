@@ -14,7 +14,6 @@ export const CalendarEventList = ({events}) => {
 }
 
 export const EventListItem = ({event}) => {
-    console.log(event)
     const {summary, start} = event;
     try{
         var eventDate = new Date(start.dateTime);
