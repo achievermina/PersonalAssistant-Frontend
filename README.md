@@ -1,6 +1,7 @@
 ## Personal Assistant 
 
 The web application is a customized assistant for schedule management, job search and YouTube search.
+Live demo has been disabled (2021)
 * [Live demo](https://personalassistant.achieverminalee.ga/)
 
 ## General info
